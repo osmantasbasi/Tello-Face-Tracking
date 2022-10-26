@@ -15,7 +15,7 @@ from datetime import datetime
 
 
 mode = 0 # 0: Webcam - 1: TelloCam
-isNewFile = 0 # 0: For Keep Going Current File - 1: For Create New File
+isNewFile = 1 # 0: For Keep Going Current File - 1: For Create New File
 
 class djiTello(QMainWindow):
     def __init__(self):
