@@ -360,7 +360,7 @@ class djiTello(QMainWindow):
                     f.write("\n")
                     if(num < 8):
                         f.write(f"{temp[temp_num%3]}:")
-            f.write("----------------------------------------------------\n")
+            f.write("---------------------------------------------------\n")
         self.statusBar().showMessage('INFO: Values Saved.')
                     
             
