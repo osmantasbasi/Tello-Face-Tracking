@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from turtle import goto
 from PyQt5.uic import loadUi
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5 import QtGui, QtCore
