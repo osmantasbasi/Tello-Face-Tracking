@@ -61,7 +61,7 @@ class djiTello(QMainWindow):
         self.lrRadio.toggled.connect(self.updateLR)
         self.udRadio.toggled.connect(self.updateUD)
         
-        self.runCode()
+        
 
 
     # --------------------- CODE LOOP ---------------------
@@ -486,3 +486,4 @@ class djiTello(QMainWindow):
 if __name__ == "__main__":
     app = QApplication([])
     window = djiTello()
+    window.runCode()
