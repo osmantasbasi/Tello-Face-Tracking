@@ -30,6 +30,7 @@ class djiTello(QMainWindow):
         self.face_detector = faceDetector() # Set Up Face Detector
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.checkmode()
+        self.statusBar().showMessage('INFO: ')
         
         if(isNewFile):
             with open("PID.txt", "w") as f:
@@ -84,6 +85,7 @@ class djiTello(QMainWindow):
                     self.battery_label.setText("%" + str(self.me.get_battery())) # Setting battery label to see drone charge.
                 except: # If can't get img, give an error.
                     print("Cant Get İmage.")
+                    self.statusBar().showMessage("ERROR: Can't Get Image.")
                     continue
             
                 
@@ -115,10 +117,12 @@ class djiTello(QMainWindow):
                     self.findErrors()                   # Finding PID Errors To Set Speed Of Drone
                 try:
                     if(not self.keyboard_control.isChecked()):
-                        self.me.send_rc_control(0, self.fbSpeed, -self.udSpeed, self.yawSpeed)
+                        if(mode):
+                            self.me.send_rc_control(0, self.fbSpeed, -self.udSpeed, self.yawSpeed)
                     
                 except: # If not connected the drone give an error
-                    print("Moving Drone Failed.")
+                    print("Moving Drone Failed.----------------")
+                    self.statusBar().showMessage('ERROR: Moving Drone Failed.')
             elif self.pageNum == 1: # If in manual control page
                 try:
                     self.manuel.getSpeeds(self.me) # Getting manual speeds from gui to remote control drone
@@ -322,6 +326,7 @@ class djiTello(QMainWindow):
             self.udPID[2] = int(self.ki_value.text()) / 100.0
 
     def saveValues(self): # Saving PID Values To File
+        
         valueList = []
         valueList.append(self.fbPID[0])
         valueList.append(self.lrPID[0])
@@ -356,6 +361,7 @@ class djiTello(QMainWindow):
                     if(num < 8):
                         f.write(f"{temp[temp_num%3]}:")
             f.write("----------------------------------------------------\n")
+        self.statusBar().showMessage('INFO: Values Saved.')
                     
             
 
@@ -397,11 +403,13 @@ class djiTello(QMainWindow):
             self.me.takeoff()
         except:
             print("Take Off Failed")
+            self.statusBar().showMessage('ERROR: Take Off Failed.')
     def landDrone(self): # Land The Drone
         try:
             self.me.land()
         except:
             print("Land Failed.")
+            self.statusBar().showMessage('ERROR: Land Failed.')
 
 
     def openManuelPage(self): # Opening Manual Page
@@ -470,6 +478,7 @@ class djiTello(QMainWindow):
                 self.me.send_rc_control(lrspeed, fbspeed, udspeed, yawspeed)
             except: # If not connected the drone, give an error.
                 print("Moving Drone Failed.")
+                self.statusBar().showMessage('ERROR: Moving Drone Failed.')
                 
     def checkmode(self):
         if(not mode):
