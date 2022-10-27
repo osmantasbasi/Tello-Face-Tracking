@@ -99,7 +99,7 @@ class djiTello(QMainWindow):
             
             
             self.getPIDValues() # Set PID Values to Control Speeds of Drone
-            #print("Shape: ", imgGui.shape)
+          
             
 
             if(isDraw):
