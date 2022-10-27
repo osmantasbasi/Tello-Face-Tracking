@@ -16,17 +16,19 @@ from datetime import datetime
 
 mode = 0 # 0: Webcam - 1: TelloCam
 isNewFile = 1 # 0: For Keep Going Current File - 1: For Create New File
+isDraw = 0 # 1: Draw face area and center of camera  0: Don't draw face area and center of camera
 
 class djiTello(QMainWindow):
     def __init__(self):
-        global mode, isNewFile
+        global mode, isNewFile, isDraw
         super().__init__()
         loadUi("opencv.ui",self)
         self.variables() # Init Variables
         self.key_info = KeyboardInfo() # Set up keyboard info window
         self.manuel = manuelControl() # Set up manuelControl widget
         self.face_detector = faceDetector() # Set Up Face Detector
-        #self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        self.checkmode()
         
         if(isNewFile):
             with open("PID.txt", "w") as f:
@@ -100,8 +102,10 @@ class djiTello(QMainWindow):
             #print("Shape: ", imgGui.shape)
             
 
-
-            imgGui = self.drawFace(img = imgGui, rt = 4) # Drawing Face Area
+            if(isDraw):
+                imgGui = self.drawFace(img = imgGui, rt = 4) # Drawing Face Area
+                cv2.line(imgGui, (self.imgWidth // 2, 0), (self.imgWidth // 2 , self.imgHeight), (255,0,0), 4) # Draw Center Point
+                cv2.line(imgGui, (0, self.imgHeight // 2), (self.imgWidth, self.imgHeight // 2), (255,0,0), 4) #
             
 
             if self.pageNum == 0:  # If in main page
@@ -129,8 +133,7 @@ class djiTello(QMainWindow):
             
             cv2.putText(imgGui, f'FPS: {int(fps)}', (20, 70), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 2) # Write FPS Top Corner
             
-            cv2.line(imgGui, (self.imgWidth // 2, 0), (self.imgWidth // 2 , self.imgHeight), (255,0,0), 4) # Draw Center Point
-            cv2.line(imgGui, (0, self.imgHeight // 2), (self.imgWidth, self.imgHeight // 2), (255,0,0), 4) #
+            
             
 
             
@@ -241,7 +244,7 @@ class djiTello(QMainWindow):
     
 
     def findFace(self, img): # Using Mediapipe Finding Any Face
-        img, self.bboxs = self.face_detector.findFaces(img) #Finding face using mediapipe
+        img, self.bboxs = self.face_detector.findFaces(img, draw=isDraw) #Finding face using mediapipe
         
         return img, self.bboxs
         
@@ -466,6 +469,14 @@ class djiTello(QMainWindow):
                 self.me.send_rc_control(lrspeed, fbspeed, udspeed, yawspeed)
             except: # If not connected the drone, give an error.
                 print("Moving Drone Failed.")
+                
+    def checkmode(self):
+        if(not mode):
+            self.takeOff_button.setEnabled(False)
+            self.land_button.setEnabled(False)
+            self.manuel_button.setEnabled(False)
+            self.keyboard_control.setEnabled(False)
+        
        
 
 
