@@ -14,7 +14,7 @@ from datetime import datetime
 
 
 
-mode = 0 # 0: Webcam - 1: TelloCam (Default: 1)
+mode = 1 # 0: Webcam - 1: TelloCam (Default: 1)
 isNewFile = 1 # 0: For Keep Going Current File - 1: For Create New File (Default: 0)
 isDraw = 1 # 0: Don't draw face area and center of camera 1: Draw face area and center of camera (Default: 1)  
 
@@ -70,7 +70,7 @@ class djiTello(QMainWindow):
         cTime = 0
         pTime = 0
         while True:
-            self.time1 = time.time()
+            # self.time1 = time.time()
             if(self.keyboard_control.isChecked()):
                 self.key_info.show() # If Keyboard Control activated, open keyboard info window
             else:
@@ -151,9 +151,9 @@ class djiTello(QMainWindow):
             elif self.pageNum == 1:
                 self.manuel.camImg.setPixmap(QtGui.QPixmap.fromImage(imgGui))                                         
 
-            self.time2 = time.time()
-            self.delta_time = round(self.time2 - self.time1, 4)
-            print("Time: {}".format(self.delta_time))
+            # self.time2 = time.time()
+            # self.delta_time = round(self.time2 - self.time1, 4)
+            # print("Time: {}".format(self.delta_time))
             QtCore.QCoreApplication.processEvents() # Updade Gui
 
         
@@ -201,14 +201,13 @@ class djiTello(QMainWindow):
                 print("Yaw Speed: ", self.yawSpeed)
                 print("UpDown Speed: ", self.udSpeed)
                 
-                print(f"Der Err: {self.derivative_values}")
+                
                 
                 
                 
                 self.integral_prior = self.integral_values
-                self.pErrors[0] = self.errors[0]
-                self.pErrors[1] = self.errors[1]
-                self.pErrors[2] = self.errors[2]
+                self.pErrors = self.errors
+   
                 
 
         except: # If there is no face give an error
@@ -276,7 +275,7 @@ class djiTello(QMainWindow):
         self.mode = 0
         self.info = []
         self.bboxs = []
-        self.fb_Range = [170, 190] # Root Of Face Area
+        self.fb_Range = [200, 190] # Root Of Face Area
         self.errors = [0, 0, 0]  # fbError, lrError, udError
         self.pErrors = [0, 0, 0] # fbError, lrError, udError
 
@@ -308,7 +307,7 @@ class djiTello(QMainWindow):
         self.proposal_values = [0.0, 0.0, 0.0]
         
         self.keyboard_speed = 0
-        self.delta_time = 0.1
+        self.delta_time = 0.025
             
     def getPIDValues(self): # Getting PID Values From Sliders
         if self.mode == 0:
