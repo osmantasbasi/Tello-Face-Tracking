@@ -14,7 +14,7 @@ from datetime import datetime
 
 
 
-mode = 1 # 0: Webcam - 1: TelloCam (Default: 1)
+mode = 0 # 0: Webcam - 1: TelloCam (Default: 1)
 isNewFile = 1 # 0: For Keep Going Current File - 1: For Create New File (Default: 0)
 isDraw = 1 # 0: Don't draw face area and center of camera 1: Draw face area and center of camera (Default: 1)  
 
