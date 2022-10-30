@@ -13,7 +13,7 @@ from keyboard_info import KeyboardInfo
 from datetime import datetime
 
 
-mode = 1 # 0: Webcam - 1: TelloCam (Default: 1)
+mode = 0 # 0: Webcam - 1: TelloCam (Default: 1)
 isNewFile = 0 # 0: For Keep Going Current File - 1: For Create New File (Default: 0)
 isDraw = 1 # 0: Don't draw area and center of face 1: Draw area and center of face (Default: 1)  
 
@@ -209,7 +209,9 @@ class djiTello(QMainWindow):
                 
 
         except: # If there is no face give an error
+            
             print("Error Finding PID Errors")
+            self.statusBar().showMessage('ERROR: Can"t find Errors')
 
 
 
