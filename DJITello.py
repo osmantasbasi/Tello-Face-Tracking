@@ -14,8 +14,8 @@ from datetime import datetime
 
 
 mode = 1 # 0: Webcam - 1: TelloCam (Default: 1)
-isNewFile = 1 # 0: For Keep Going Current File - 1: For Create New File (Default: 0)
-isDraw = 1 # 0: Don't draw face area and center of camera 1: Draw face area and center of camera (Default: 1)  
+isNewFile = 0 # 0: For Keep Going Current File - 1: For Create New File (Default: 0)
+isDraw = 1 # 0: Don't draw area and center of face 1: Draw area and center of face (Default: 1)  
 
 class djiTello(QMainWindow):
     def __init__(self):
@@ -30,9 +30,7 @@ class djiTello(QMainWindow):
         self.checkmode()
         self.statusBar().showMessage('INFO: ')
         
-        if(isNewFile):
-            with open("PID.txt", "w") as f:
-                pass
+        
         
         
         if not mode: # Webcam Mode
@@ -324,6 +322,9 @@ class djiTello(QMainWindow):
             self.udPID[2] = int(self.ki_value.text()) / 100.0
 
     def saveValues(self): # Saving PID Values To File
+        if(isNewFile):
+            with open("PID.txt", "w") as f:
+                pass
         
         valueList = []
         valueList.append(self.fbPID[0])
