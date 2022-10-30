@@ -13,8 +13,7 @@ from keyboard_info import KeyboardInfo
 from datetime import datetime
 
 
-
-mode = 0 # 0: Webcam - 1: TelloCam (Default: 1)
+mode = 1 # 0: Webcam - 1: TelloCam (Default: 1)
 isNewFile = 1 # 0: For Keep Going Current File - 1: For Create New File (Default: 0)
 isDraw = 1 # 0: Don't draw face area and center of camera 1: Draw face area and center of camera (Default: 1)  
 
@@ -70,6 +69,7 @@ class djiTello(QMainWindow):
         cTime = 0
         pTime = 0
         while True:
+            self.key_info.setManuel(self.keyboard_control.isChecked())
             # self.time1 = time.time()
             if(self.keyboard_control.isChecked()):
                 self.key_info.show() # If Keyboard Control activated, open keyboard info window
@@ -275,7 +275,7 @@ class djiTello(QMainWindow):
         self.mode = 0
         self.info = []
         self.bboxs = []
-        self.fb_Range = [200, 190] # Root Of Face Area
+        self.fb_Range = [300] # Root Of Face Area
         self.errors = [0, 0, 0]  # fbError, lrError, udError
         self.pErrors = [0, 0, 0] # fbError, lrError, udError
 
@@ -307,7 +307,7 @@ class djiTello(QMainWindow):
         self.proposal_values = [0.0, 0.0, 0.0]
         
         self.keyboard_speed = 0
-        self.delta_time = 0.025
+        self.delta_time = 0.0025
             
     def getPIDValues(self): # Getting PID Values From Sliders
         if self.mode == 0:
@@ -399,12 +399,14 @@ class djiTello(QMainWindow):
     def takeOffDrone(self): # Take Off The Drone
         try:
             self.me.takeoff()
+            self.statusBar().showMessage('INFO: Taking Off...')
         except:
             print("Take Off Failed")
             self.statusBar().showMessage('ERROR: Take Off Failed.')
     def landDrone(self): # Land The Drone
         try:
             self.me.land()
+            self.statusBar().showMessage('INFO: Landing...')
         except:
             print("Land Failed.")
             self.statusBar().showMessage('ERROR: Land Failed.')
