@@ -109,17 +109,17 @@ class djiTello(QMainWindow):
             
 
             if self.pageNum == 0:  # If in main page
-                self.findPositions()                # Finding Cx, Cy, Area of Face
-                if(not self.keyboard_control.isChecked()):
-                    self.findErrors()                   # Finding PID Errors To Set Speed Of Drone
-                try:
+                if(self.findPositions()):                # Finding Cx, Cy, Area of Face
                     if(not self.keyboard_control.isChecked()):
-                        if(mode):
-                            self.me.send_rc_control(0, self.fbSpeed, -self.udSpeed, self.yawSpeed)
-                    
-                except: # If not connected the drone give an error
-                    print("Moving Drone Failed.----------------")
-                    self.statusBar().showMessage('ERROR: Moving Drone Failed.')
+                        self.findErrors()                   # Finding PID Errors To Set Speed Of Drone
+                    try:
+                        if(not self.keyboard_control.isChecked()):
+                            if(mode):
+                                self.me.send_rc_control(0, self.fbSpeed, -self.udSpeed, self.yawSpeed)
+                        
+                    except: # If not connected the drone give an error
+                        print("Moving Drone Failed.----------------")
+                        self.statusBar().showMessage('ERROR: Moving Drone Failed.')
             elif self.pageNum == 1: # If in manual control page
                 try:
                     self.manuel.getSpeeds(self.me) # Getting manual speeds from gui to remote control drone
@@ -205,6 +205,8 @@ class djiTello(QMainWindow):
                 
                 self.integral_prior = self.integral_values
                 self.pErrors = self.errors
+                
+                self.statusBar().showMessage('INFO: Trakcing Face.')
    
                 
 
@@ -228,11 +230,16 @@ class djiTello(QMainWindow):
 
                 print("Area: ", self.area)
                 print("CX: ", self.centerXY[0], "CY: ", self.centerXY[1])
+                
+                return True
             else:
+                self.statusBar().showMessage('ERROR: There is no face!!')
                 self.area = 0
                 self.centerXY[0] = 0
                 self.centerXY[1] = 0
+                return False
         except: # If there is no face give an error
+            self.statusBar().showMessage('ERROR: There is no face!!')
             print("Cant Calculate The Speeds.")
             self.area = 0
             self.centerXY[0] = 0
@@ -243,6 +250,7 @@ class djiTello(QMainWindow):
             self.udSpeed = 0
             self.fSpeed = 0
             self.bSpeed = 0
+            return False
    
     
 
@@ -363,6 +371,7 @@ class djiTello(QMainWindow):
                         f.write(f"{temp[temp_num%3]}:")
             f.write("---------------------------------------------------\n")
         self.statusBar().showMessage('INFO: Values Saved.')
+        
                     
             
 
